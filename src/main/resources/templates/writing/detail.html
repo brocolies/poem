@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>글 상세</title>
+</head>
+<body>
+<h1 th:text="${writing.type}">타입</h1>
+<p th:text="${writing.content}">글 내용</p>
+<p th:text="${writing.tags}">태그</p>
+<p th:text="${writing.createdAt}">작성일</p>
+
+<form th:action="@{/writings/{id}/delete(id=${writing.id})}" method="post">
+    <button type="submit">삭제</button>
+</form>
+<a href="/writings">목록으로</a>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>글 쓰기</title>
+</head>
+<body>
+<h1>글 쓰기</h1>
+<form action="/writings" method="post">
+    <textarea name="content" placeholder="글을 써보세요" required></textarea>
+    <br>
+    <select name="type">
+        <option value="DIARY">내 글</option>
+        <option value="QUOTE">좋아하는 글</option>
+    </select>
+    <br>
+    <input type="text" name="tags" placeholder="태그 (쉼표로 구분)">
+    <br>
+    <button type="submit">저장</button>
+</form>
+<a href="/writings">목록으로</a>
+</body>
+</html>
