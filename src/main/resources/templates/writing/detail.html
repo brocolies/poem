@@ -9,7 +9,17 @@
 <p th:text="${writing.content}">글 내용</p>
 <p th:text="${writing.tags}">태그</p>
 <p th:text="${writing.createdAt}">작성일</p>
-
+<h2>추천 시</h2>
+<div th:if="${#lists.isEmpty(recommendedPoems)}">
+    <p>태그에 맞는 추천 시가 없습니다.</p>
+</div>
+<div th:each="poem : ${recommendedPoems}">
+    <a th:href="@{/poems/{id}(id=${poem.id})}">
+        <p th:text="${poem.title}">시 제목</p>
+    </a>
+    <span th:text="${poem.author}">저자</span>
+    <hr>
+</div>
 <form th:action="@{/writings/{id}/delete(id=${writing.id})}" method="post">
     <button type="submit">삭제</button>
 </form>

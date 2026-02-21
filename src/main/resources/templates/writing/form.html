@@ -13,9 +13,13 @@
         <option value="DIARY">내 글</option>
         <option value="QUOTE">좋아하는 글</option>
     </select>
-    <br>
-    <input type="text" name="tags" placeholder="태그 (쉼표로 구분)">
-    <br>
+    <br><br>
+    <p>태그 선택 (복수 선택 가능)</p>
+    <label th:each="tag : ${T(com.poem.poem.domain.Tag).values()}">
+        <input type="checkbox" name="tags" th:value="${tag.name()}">
+        <span th:text="${tag.getLabel()}">태그</span>
+    </label>
+    <br><br>
     <button type="submit">저장</button>
 </form>
 <a href="/writings">목록으로</a>
