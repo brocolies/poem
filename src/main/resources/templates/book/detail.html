@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>시집 상세</title>
+</head>
+<body>
+<h1 th:text="${book.title}">시집 제목</h1>
+<p th:text="${book.author}">저자</p>
+<p th:text="${book.publishedYear}">출간년도</p>
+<img th:src="${book.coverImageUrl}" alt="표지" style="max-width: 200px;"
+     th:if="${book.coverImageUrl}">
+
+<h2>수록 시</h2>
+<div th:each="poem : ${poems}">
+    <a th:href="@{/poems/{id}(id=${poem.id})}">
+        <p th:text="${poem.title}">시 제목</p>
+    </a>
+</div>
+
+<br>
+<a th:href="${book.purchaseUrl}" target="_blank"
+   th:if="${book.purchaseUrl}">
+    <button>구매하기</button>
+</a>
+<br><br>
+<a href="/books">시집 목록으로</a>
+</body>
+</html>
