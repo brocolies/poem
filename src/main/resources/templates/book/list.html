@@ -1,19 +1,96 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
 <head>
-    <meta charset="UTF-8">
-    <title>시집 목록</title>
+    <title>시집 둘러보기</title>
+    <style>
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 28px;
+        }
+        .book-card {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: transform 0.3s;
+        }
+        .book-card:hover { transform: translateY(-6px); }
+        .book-cover {
+            width: 100%;
+            aspect-ratio: 3/4;
+            background: linear-gradient(160deg, var(--ivory-light) 0%, var(--ivory) 100%);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow 0.3s;
+        }
+        .book-card:hover .book-cover { box-shadow: var(--shadow-lg); }
+        .book-cover::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 12px;
+            width: 1px;
+            height: 100%;
+            background: rgba(42, 37, 32, 0.06);
+        }
+        .cover-text {
+            font-family: 'Nanum Myeongjo', serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 20px 24px;
+            line-height: 1.6;
+        }
+        .cover-author-label {
+            position: absolute;
+            bottom: 16px;
+            font-size: 10px;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+        .book-card .bc-title {
+            font-family: 'Nanum Myeongjo', serif;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .book-card .bc-author { font-size: 12px; color: var(--text-muted); }
+    </style>
 </head>
 <body>
-<h1>시집 목록</h1>
+<div layout:fragment="content">
+    <div class="page">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">시집 둘러보기</h1>
+                <p class="page-subtitle">엄선된 시집들</p>
+            </div>
+        </div>
 
-<div th:each="book : ${books}">
-    <a th:href="@{/books/{id}(id=${book.id})}">
-        <h3 th:text="${book.title}">시집 제목</h3>
-    </a>
-    <p th:text="${book.author}">저자</p>
-    <p th:text="${book.publishedYear}">출간년도</p>
-    <hr>
+        <div class="book-grid">
+            <a th:each="book : ${books}"
+               th:href="@{/books/{id}(id=${book.id})}"
+               class="book-card">
+                <div class="book-cover">
+                    <span class="cover-text" th:text="${book.title}">시집 제목</span>
+                    <span class="cover-author-label" th:text="${book.author}">저자</span>
+                </div>
+                <p class="bc-title" th:text="${book.title}">시집 제목</p>
+                <p class="bc-author" th:text="${book.author + ' · ' + book.publishedYear}">저자 · 년도</p>
+            </a>
+        </div>
+    </div>
 </div>
 </body>
 </html>

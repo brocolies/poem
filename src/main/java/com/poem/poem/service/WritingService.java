@@ -30,4 +30,8 @@ public class WritingService {
     public void delete(Long id) {
         writingRepository.deleteById(id);
     }
+
+    public List<Writing> findByType(WritingType type) {
+        return writingRepository.findByType(type);
+    }
 }

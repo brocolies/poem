@@ -1,19 +1,75 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
 <head>
-    <meta charset="UTF-8">
-    <title>시 상세</title>
+    <title th:text="${poem.title}">시 상세</title>
+    <style>
+        .poem-detail { text-align: center; padding: 48px 0; }
+        .pd-title {
+            font-family: 'Nanum Myeongjo', serif;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .pd-author { font-size: 13px; color: var(--text-muted); margin-bottom: 56px; letter-spacing: 0.5px; }
+        .pd-content {
+            font-family: 'Nanum Myeongjo', serif;
+            font-size: 17px;
+            line-height: 2.6;
+            white-space: pre-line;
+            margin-bottom: 48px;
+        }
+        .pd-tags { display: flex; justify-content: center; gap: 8px; margin-bottom: 56px; }
+        .pd-tag {
+            font-size: 11px;
+            color: var(--warm-green);
+            background: var(--warm-green-pale);
+            border: 1px solid var(--warm-green-border);
+            padding: 4px 16px;
+            border-radius: 100px;
+        }
+        .pd-book-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            border: 1px solid var(--warm-green-border);
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--warm-green);
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .pd-book-link:hover {
+            background: var(--warm-green);
+            color: #F5F1E8;
+            border-color: var(--warm-green);
+        }
+    </style>
 </head>
 <body>
-<h1 th:text="${poem.title}">시 제목</h1>
-<p th:text="${poem.author}">저자</p>
-<pre th:text="${poem.content}">시 내용</pre>
-<p>태그: <span th:text="${poem.tags}">태그</span></p>
+<div layout:fragment="content">
+    <div class="page-narrow">
+        <a th:href="@{/books/{id}(id=${poem.book.id})}" class="back-link" th:if="${poem.book}">← 시집으로</a>
 
-<br>
-<a th:href="@{/books/{id}(id=${poem.book.id})}"
-   th:if="${poem.book}">
-    이 시가 수록된 시집 보기
-</a>
+        <div class="poem-detail">
+            <h1 class="pd-title" th:text="${poem.title}">시 제목</h1>
+            <p class="pd-author" th:text="${poem.author}">저자</p>
+            <p class="pd-content" th:text="${poem.content}">시 내용</p>
+
+            <div class="pd-tags" th:if="${poem.tags != null}">
+                <span class="pd-tag" th:each="tag : ${poem.tags.split(',')}" th:text="${tag}">태그</span>
+            </div>
+
+            <a th:href="@{/books/{id}(id=${poem.book.id})}"
+               th:if="${poem.book}"
+               class="pd-book-link">
+                《<span th:text="${poem.book.title}">시집 제목</span>》 보러가기 →
+            </a>
+        </div>
+    </div>
+</div>
 </body>
 </html>

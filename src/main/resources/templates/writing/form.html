@@ -1,27 +1,138 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
 <head>
-    <meta charset="UTF-8">
     <title>글 쓰기</title>
+    <style>
+        .form-group { margin-bottom: 32px; }
+        .form-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .form-textarea {
+            width: 100%;
+            min-height: 280px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: white;
+            font-family: 'Nanum Myeongjo', serif;
+            font-size: 16px;
+            line-height: 2.2;
+            color: var(--text-primary);
+            resize: vertical;
+            outline: none;
+            transition: all 0.3s;
+        }
+        .form-textarea:focus {
+            border-color: var(--warm-green-medium);
+            box-shadow: 0 0 0 3px var(--warm-green-pale);
+        }
+        .form-textarea::placeholder { color: var(--text-muted); }
+        .type-selector { display: flex; gap: 10px; }
+        .type-option { flex: 1; text-align: center; }
+        .type-option input { display: none; }
+        .type-option label {
+            display: block;
+            padding: 14px 20px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+        .type-option input:checked + label {
+            border-color: var(--warm-green);
+            background: var(--warm-green);
+            color: #F5F1E8;
+            font-weight: 500;
+        }
+        .tag-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+        .tag-option input { display: none; }
+        .tag-option label {
+            display: inline-block;
+            padding: 9px 20px;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 13px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+        .tag-option input:checked + label {
+            border-color: var(--warm-green);
+            background: var(--warm-green);
+            color: #F5F1E8;
+        }
+        .tag-option label:hover { border-color: var(--warm-green-border); color: var(--text-secondary); }
+        .btn-submit {
+            width: 100%;
+            padding: 18px;
+            background: var(--warm-green);
+            color: #F5F1E8;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 16px;
+            letter-spacing: 0.3px;
+        }
+        .btn-submit:hover {
+            background: var(--warm-green-light);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(79, 94, 72, 0.15);
+        }
+    </style>
 </head>
 <body>
-<h1>글 쓰기</h1>
-<form action="/writings" method="post">
-    <textarea name="content" placeholder="글을 써보세요" required></textarea>
-    <br>
-    <select name="type">
-        <option value="DIARY">내 글</option>
-        <option value="QUOTE">좋아하는 글</option>
-    </select>
-    <br><br>
-    <p>태그 선택 (복수 선택 가능)</p>
-    <label th:each="tag : ${T(com.poem.poem.domain.Tag).values()}">
-        <input type="checkbox" name="tags" th:value="${tag.name()}">
-        <span th:text="${tag.getLabel()}">태그</span>
-    </label>
-    <br><br>
-    <button type="submit">저장</button>
-</form>
-<a href="/writings">목록으로</a>
+<div layout:fragment="content">
+    <div class="page-narrow">
+        <h1 class="page-title" style="margin-bottom: 40px;">글 쓰기</h1>
+
+        <form action="/writings" method="post">
+            <div class="form-group">
+                <label class="form-label">글 종류</label>
+                <div class="type-selector">
+                    <div class="type-option">
+                        <input type="radio" name="type" id="type-diary" value="DIARY" checked>
+                        <label for="type-diary">내 글</label>
+                    </div>
+                    <div class="type-option">
+                        <input type="radio" name="type" id="type-quote" value="QUOTE">
+                        <label for="type-quote">좋아하는 글</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">내용</label>
+                <textarea class="form-textarea" name="content" placeholder="오늘 하루, 떠오르는 생각을 적어보세요." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">감정 태그</label>
+                <div class="tag-grid">
+                    <div class="tag-option" th:each="tag : ${T(com.poem.poem.domain.Tag).values()}">
+                        <input type="checkbox" name="tags" th:id="${'tag-' + tag.name()}" th:value="${tag.name()}">
+                        <label th:for="${'tag-' + tag.name()}" th:text="${tag.getLabel()}">태그</label>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">저장하기</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>

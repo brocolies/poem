@@ -1,29 +1,130 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
 <head>
-    <meta charset="UTF-8">
-    <title>시집 상세</title>
+    <title th:text="${book.title}">시집 상세</title>
+    <style>
+        .book-detail-header { display: flex; gap: 48px; margin-bottom: 56px; }
+        .book-detail-cover {
+            width: 220px;
+            flex-shrink: 0;
+            aspect-ratio: 3/4;
+            background: linear-gradient(160deg, var(--ivory-light) 0%, var(--ivory) 100%);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+        .book-detail-cover::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 14px;
+            width: 1px;
+            height: 100%;
+            background: rgba(42, 37, 32, 0.06);
+        }
+        .cover-text {
+            font-family: 'Nanum Myeongjo', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 24px;
+            line-height: 1.6;
+        }
+        .book-detail-info { padding-top: 16px; }
+        .book-detail-info .bd-title {
+            font-family: 'Nanum Myeongjo', serif;
+            font-size: 30px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .book-detail-info .bd-author { font-size: 15px; color: var(--text-secondary); margin-bottom: 4px; }
+        .book-detail-info .bd-year { font-size: 13px; color: var(--text-muted); margin-bottom: 32px; }
+        .btn-purchase {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 32px;
+            background: var(--warm-green);
+            color: #F5F1E8;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        .btn-purchase:hover {
+            background: var(--warm-green-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(79, 94, 72, 0.18);
+        }
+        .poem-list-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+        .poem-list-title {
+            font-family: 'Nanum Myeongjo', serif;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+        .poem-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border);
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s;
+        }
+        .poem-list-item:first-child { border-top: 1px solid var(--border); }
+        .poem-list-item:hover { background: var(--warm-green-pale); padding-left: 28px; }
+        .pli-title { font-family: 'Nanum Myeongjo', serif; font-size: 15px; }
+        .pli-arrow { color: var(--text-muted); transition: transform 0.2s; }
+        .poem-list-item:hover .pli-arrow { transform: translateX(3px); color: var(--warm-green); }
+    </style>
 </head>
 <body>
-<h1 th:text="${book.title}">시집 제목</h1>
-<p th:text="${book.author}">저자</p>
-<p th:text="${book.publishedYear}">출간년도</p>
-<img th:src="${book.coverImageUrl}" alt="표지" style="max-width: 200px;"
-     th:if="${book.coverImageUrl}">
+<div layout:fragment="content">
+    <div class="page">
+        <a href="/books" class="back-link">← 시집 목록</a>
 
-<h2>수록 시</h2>
-<div th:each="poem : ${poems}">
-    <a th:href="@{/poems/{id}(id=${poem.id})}">
-        <p th:text="${poem.title}">시 제목</p>
-    </a>
+        <div class="book-detail-header">
+            <div class="book-detail-cover">
+                <span class="cover-text" th:text="${book.title}">시집 제목</span>
+            </div>
+            <div class="book-detail-info">
+                <h1 class="bd-title" th:text="${book.title}">시집 제목</h1>
+                <p class="bd-author" th:text="${book.author}">저자</p>
+                <p class="bd-year" th:text="${book.publishedYear + '년 출간'}">출간년도</p>
+                <a th:href="${book.purchaseUrl}" target="_blank" class="btn-purchase"
+                   th:if="${book.purchaseUrl}">구매하기 →</a>
+            </div>
+        </div>
+
+        <div>
+            <p class="poem-list-label">수록 작품</p>
+            <h2 class="poem-list-title">수록 시</h2>
+            <a th:each="poem : ${poems}"
+               th:href="@{/poems/{id}(id=${poem.id})}"
+               class="poem-list-item">
+                <span class="pli-title" th:text="${poem.title}">시 제목</span>
+                <span class="pli-arrow">→</span>
+            </a>
+        </div>
+    </div>
 </div>
-
-<br>
-<a th:href="${book.purchaseUrl}" target="_blank"
-   th:if="${book.purchaseUrl}">
-    <button>구매하기</button>
-</a>
-<br><br>
-<a href="/books">시집 목록으로</a>
 </body>
 </html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title layout:title-pattern="$CONTENT_TITLE">시집</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Pretendard:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ivory: #F0EBE0;
+            --ivory-light: #F5F1E8;
+            --cream: #FAF8F3;
+            --warm-green: #4F5E48;
+            --warm-green-light: #5E6F56;
+            --warm-green-pale: rgba(79, 94, 72, 0.06);
+            --warm-green-border: rgba(79, 94, 72, 0.12);
+            --warm-green-medium: rgba(79, 94, 72, 0.18);
+            --text-primary: #2A2520;
+            --text-secondary: #635C55;
+            --text-muted: #9E9589;
+            --border: rgba(42, 37, 32, 0.06);
+            --border-strong: rgba(42, 37, 32, 0.10);
+            --shadow-sm: 0 1px 4px rgba(42, 37, 32, 0.04);
+            --shadow-md: 0 6px 20px rgba(42, 37, 32, 0.06);
+            --shadow-lg: 0 12px 40px rgba(42, 37, 32, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Pretendard', -apple-system, sans-serif;
+            background: var(--cream);
+            color: var(--text-primary);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(250, 248, 243, 0.8);
+            backdrop-filter: blur(24px) saturate(1.2);
+            -webkit-backdrop-filter: blur(24px) saturate(1.2);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            padding: 0 48px;
+        }
+
+        .nav-inner {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .nav-logo {
+            font-family: 'Nanum Myeongjo', serif;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--warm-green);
+            text-decoration: none;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 36px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--warm-green); }
+
+        .page { max-width: 1000px; margin: 0 auto; padding: 112px 48px 80px; position: relative; z-index: 1; }
+        .page-narrow { max-width: 640px; margin: 0 auto; padding: 112px 48px 80px; position: relative; z-index: 1; }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 44px;
+        }
+
+        .page-title {
+            font-family: 'Nanum Myeongjo', serif;
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .page-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        .btn-new {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 22px;
+            background: transparent;
+            color: var(--warm-green);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 6px;
+            border: 1px solid var(--warm-green-border);
+            transition: all 0.3s;
+        }
+
+        .btn-new:hover {
+            background: var(--warm-green);
+            color: #F5F1E8;
+            border-color: var(--warm-green);
+        }
+
+        .tag {
+            font-size: 11px;
+            color: var(--warm-green);
+            background: var(--warm-green-pale);
+            border: 1px solid var(--warm-green-border);
+            padding: 3px 12px;
+            border-radius: 100px;
+            letter-spacing: 0.2px;
+        }
+
+        .date { font-size: 11px; color: var(--text-muted); letter-spacing: 0.3px; }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-bottom: 28px;
+            transition: all 0.3s;
+            letter-spacing: 0.2px;
+        }
+
+        .back-link:hover { color: var(--warm-green); }
+
+        .footer {
+            text-align: center;
+            padding: 40px 48px;
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-inner">
+        <a href="/" class="nav-logo">시집</a>
+        <ul class="nav-links">
+            <li><a href="/">오늘의 시</a></li>
+            <li><a href="/writings/diary">내 글</a></li>
+            <li><a href="/writings/quote">좋아하는 글</a></li>
+            <li><a href="/books">시집 둘러보기</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div layout:fragment="content"></div>
+
+<div class="footer">시집 — 시를 읽는 새로운 방법</div>
+
+</body>
+</html>

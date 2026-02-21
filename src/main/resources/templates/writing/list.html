@@ -1,20 +1,73 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
 <head>
-    <meta charset="UTF-8">
-    <title>내 글 목록</title>
+    <title th:text="${pageTitle}">글 목록</title>
+    <style>
+        .writing-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 28px 32px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: block;
+            color: inherit;
+        }
+        .writing-card:hover {
+            border-color: var(--warm-green-border);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        .writing-card .card-type {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--warm-green);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .writing-card .card-content {
+            font-family: 'Nanum Myeongjo', serif;
+            font-size: 15px;
+            line-height: 1.8;
+            margin-bottom: 14px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .card-meta { display: flex; gap: 10px; align-items: center; }
+    </style>
 </head>
 <body>
-<h1>내 글 목록</h1>
-<a href="/writings/new">새 글 쓰기</a>
+<div layout:fragment="content">
+    <div class="page">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title" th:text="${pageTitle}">글 목록</h1>
+                <p class="page-subtitle" th:text="${pageSubtitle}">설명</p>
+            </div>
+            <a href="/writings/new" class="btn-new">+ 새 글 쓰기</a>
+        </div>
 
-<div th:each="writing : ${writings}">
-    <a th:href="@{/writings/{id}(id=${writing.id})}">
-        <p th:text="${writing.content}">글 내용</p>
-    </a>
-    <span th:text="${writing.type}">타입</span>
-    <span th:text="${writing.tags}">태그</span>
-    <hr>
+        <div th:if="${#lists.isEmpty(writings)}" style="text-align:center; padding:60px 20px; color:var(--text-muted); font-size:14px;">
+            아직 작성한 글이 없습니다.
+        </div>
+
+        <a th:each="writing : ${writings}"
+           th:href="@{/writings/{id}(id=${writing.id})}"
+           class="writing-card">
+            <p class="card-type" th:text="${writing.type}">타입</p>
+            <p class="card-content" th:text="${writing.content}">글 내용</p>
+            <div class="card-meta">
+                <span class="tag" th:each="tag : ${writing.tags != null ? writing.tags.split(',') : new String[0]}" th:text="${tag}">태그</span>
+                <span class="date" th:text="${#temporals.format(writing.createdAt, 'yyyy.MM.dd')}">날짜</span>
+            </div>
+        </a>
+    </div>
 </div>
 </body>
 </html>
