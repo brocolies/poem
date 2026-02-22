@@ -52,7 +52,7 @@
 <body>
 <div layout:fragment="content">
     <div class="page-narrow">
-        <a th:href="@{/books/{id}(id=${poem.book.id})}" class="back-link" th:if="${poem.book}">← 시집으로</a>
+        <a th:href="@{/books/{id}(id=${poem.bookId})}" class="back-link" th:if="${poem.bookId}">← 시집으로</a>
 
         <div class="poem-detail">
             <h1 class="pd-title" th:text="${poem.title}">시 제목</h1>
@@ -63,10 +63,10 @@
                 <span class="pd-tag" th:each="tag : ${poem.tags.split(',')}" th:text="${tag}">태그</span>
             </div>
 
-            <a th:href="@{/books/{id}(id=${poem.book.id})}"
-               th:if="${poem.book}"
+            <a th:href="@{/books/{id}(id=${poem.bookId})}"
+               th:if="${poem.bookId}"
                class="pd-book-link">
-                《<span th:text="${poem.book.title}">시집 제목</span>》 보러가기 →
+                《<span th:text="${poem.bookTitle}">시집 제목</span>》 보러가기 →
             </a>
         </div>
     </div>

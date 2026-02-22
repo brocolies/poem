@@ -1,7 +1,7 @@
 package com.poem.poem.controller;
 
-import com.poem.poem.domain.Writing;
 import com.poem.poem.domain.WritingType;
+import com.poem.poem.dto.WritingResponse;
 import com.poem.poem.service.PoemService;
 import com.poem.poem.service.WritingService;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +55,7 @@ public class WritingController {
 
     @GetMapping("/writings/{id}")
     public String detail(@PathVariable Long id, Model model) {
-        Writing writing = writingService.findById(id);
+        WritingResponse writing = writingService.findById(id);
         model.addAttribute("writing", writing);
         model.addAttribute("recommendedPoems", poemService.findByTagsRanked(writing.getTags()));
         return "writing/detail";
@@ -63,7 +63,7 @@ public class WritingController {
 
     @PostMapping("/writings/{id}/delete")
     public String delete(@PathVariable Long id) {
-        Writing writing = writingService.findById(id);
+        WritingResponse writing = writingService.findById(id);
         writingService.delete(id);
         return writing.getType() == WritingType.DIARY ? "redirect:/writings/diary" : "redirect:/writings/quote";
     }
