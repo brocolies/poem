@@ -101,7 +101,7 @@
                 <h2 class="recommend-title">이런 시는 어때요?</h2>
 
                 <div th:if="${#lists.isEmpty(recommendedPoems)}" style="text-align:center; padding:40px 20px; color:var(--text-muted); font-size:14px;">
-                    태그에 맞는 추천 시가 없습니다.
+                    태그에 해당하는 추천 시가 없습니다.
                 </div>
 
                 <a th:each="poem : ${recommendedPoems}"
