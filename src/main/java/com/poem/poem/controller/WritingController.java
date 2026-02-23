@@ -1,7 +1,10 @@
 package com.poem.poem.controller;
 
+import com.poem.poem.domain.Writing;
 import com.poem.poem.domain.WritingType;
+import com.poem.poem.dto.PoemResponse;
 import com.poem.poem.dto.WritingResponse;
+import com.poem.poem.repository.WritingRepository;
 import com.poem.poem.service.PoemService;
 import com.poem.poem.service.WritingService;
 import lombok.RequiredArgsConstructor;
@@ -15,11 +18,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WritingController {
 
+    private final WritingRepository writingRepository;
     private final WritingService writingService;
     private final PoemService poemService;
 
     @GetMapping("/")
-    public String home() {
+    public String home(Model model) {
+        List<Writing> quotes = writingRepository.findByType(WritingType.QUOTE);
+        PoemResponse todayPoem = poemService.findTodayPoem(quotes);
+        model.addAttribute("todayPoem", todayPoem);
         return "index";
     }
 

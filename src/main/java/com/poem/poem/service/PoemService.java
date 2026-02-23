@@ -1,13 +1,15 @@
 package com.poem.poem.service;
 
 import com.poem.poem.domain.Poem;
+import com.poem.poem.domain.Writing;
+import com.poem.poem.dto.PoemResponse;
 import com.poem.poem.repository.PoemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.util.Arrays;
-import java.util.Collections;
 
-import java.util.List;
+import java.util.*;
+
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -58,5 +60,43 @@ public class PoemService {
         Collections.shuffle(result);
         return result;
     }
+    public PoemResponse findTodayPoem(List<Writing> quotes) {
+        if (quotes.isEmpty()) {
+            return null;
+        }
 
+        // 1. QUOTE 태그 전부 집계
+        Map<String, Long> tagCount = quotes.stream()
+                .filter(q -> q.getTags() != null && !q.getTags().isBlank())
+                .flatMap(q -> Arrays.stream(q.getTags().split(",")))
+                .map(String::trim)
+                .collect(Collectors.groupingBy(t -> t, Collectors.counting()));
+
+        if (tagCount.isEmpty()) {
+            return null;
+        }
+
+        // 2. 상위 3개 태그 추출
+        List<String> topTags = tagCount.entrySet().stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .limit(3)
+                .map(Map.Entry::getKey)
+                .toList();
+
+        // 3. 상위 3개 중 랜덤 1개 선택
+        Random random = new Random();
+        String selectedTag = topTags.get(random.nextInt(topTags.size()));
+
+        // 4. 해당 태그의 시 중 랜덤 1편
+        List<Poem> matched = poemRepository.findAll().stream()
+                .filter(poem -> poem.getTags() != null && poem.getTags().contains(selectedTag))
+                .toList();
+
+        if (matched.isEmpty()) {
+            return null;
+        }
+
+        Poem selected = matched.get(random.nextInt(matched.size()));
+        return new PoemResponse(selected);
+    }
 }

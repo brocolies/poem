@@ -13,9 +13,25 @@
             오늘의 시
         </p>
 
-        <div style="max-width:460px; margin:0 auto; padding:56px 0;">
+        <!-- 오늘의 시가 있을 때 -->
+        <div th:if="${todayPoem != null}" style="max-width:460px; margin:0 auto; padding:56px 0;">
+            <p style="font-family:'Nanum Myeongjo',serif; font-size:28px; font-weight:700; margin-bottom:10px; letter-spacing:-0.5px;"
+               th:text="${todayPoem.title}">시 제목</p>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:40px; letter-spacing:0.5px;"
+               th:text="${todayPoem.author}">저자</p>
+            <p style="font-family:'Nanum Myeongjo',serif; font-size:17px; line-height:2.4; color:var(--text-secondary); white-space:pre-line;"
+               th:text="${todayPoem.content}">시 내용</p>
+            <a th:if="${todayPoem.bookId != null}"
+               th:href="@{/books/{id}(id=${todayPoem.bookId})}"
+               style="display:inline-flex; align-items:center; gap:6px; margin-top:48px; font-size:13px; color:var(--warm-green); text-decoration:none; font-weight:500; transition:opacity 0.3s;">
+                《<span th:text="${todayPoem.bookTitle}">시집</span>》 에서 →
+            </a>
+        </div>
+
+        <!-- 오늘의 시가 없을 때 -->
+        <div th:if="${todayPoem == null}" style="max-width:460px; margin:0 auto; padding:56px 0;">
             <p style="font-family:'Nanum Myeongjo',serif; font-size:28px; font-weight:700; margin-bottom:10px;">오늘의 시가 준비 중입니다</p>
-            <p style="font-size:13px; color:var(--text-muted); margin-bottom:40px;">글을 쓰고 태그를 남기면, 당신에게 맞는 시를 추천해드려요.</p>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:40px;">좋아하는 글을 아카이빙하면, 당신에게 맞는 시를 추천해드려요.</p>
         </div>
 
         <a href="/writings/new" style="display:inline-flex; align-items:center; gap:10px; margin-top:20px; padding:16px 36px; background:var(--warm-green); color:#F5F1E8; text-decoration:none; font-size:14px; font-weight:500; border-radius:6px; transition:all 0.3s; letter-spacing:0.3px;">글 쓰러 가기</a>
