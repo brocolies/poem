@@ -5,6 +5,7 @@ import com.poem.poem.domain.WritingType;
 import com.poem.poem.dto.PoemResponse;
 import com.poem.poem.dto.WritingResponse;
 import com.poem.poem.repository.WritingRepository;
+import com.poem.poem.service.EmotionalAnalysisService;
 import com.poem.poem.service.PoemService;
 import com.poem.poem.service.WritingService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class WritingController {
     private final WritingRepository writingRepository;
     private final WritingService writingService;
     private final PoemService poemService;
+    private final EmotionalAnalysisService emotionalAnalysisService;
 
     @GetMapping("/")
     public String home(Model model) {
@@ -54,8 +56,22 @@ public class WritingController {
     @PostMapping("/writings")
     public String create(@RequestParam String content,
                          @RequestParam WritingType type,
-                         @RequestParam(required = false) List<String> tags) {
-        String joinedTags = (tags != null) ? String.join(",", tags) : null;
+                         @RequestParam(required = false) List<String> tags,
+                         @RequestParam(required = false, defaultValue = "false") boolean useAi) {
+        // useAi: form에서 체크박스 체크하면 true, 안 하면 false
+
+        String joinedTags;
+
+        if (useAi) {
+            String aiTags = emotionalAnalysisService.analyzeTags(content);
+            // Claude에게 글 보내서 태그 받아옴
+
+            joinedTags = (aiTags != null) ? aiTags : ((tags != null) ? String.join(",", tags) : null);
+            // AI 성공하면 AI 태그, 실패하면 수동 태그로 폴백
+        } else {
+            joinedTags = (tags != null) ? String.join(",", tags) : null;
+        }
+
         writingService.save(content, type, joinedTags);
         return type == WritingType.DIARY ? "redirect:/writings/diary" : "redirect:/writings/quote";
     }

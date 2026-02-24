@@ -88,7 +88,7 @@
             <p class="type-badge" th:text="${writing.type}">타입</p>
             <p class="detail-content" th:text="${writing.content}">글 내용</p>
             <div class="card-meta" style="display:flex; gap:10px; align-items:center;">
-                <span class="tag" th:each="tag : ${writing.tags != null ? writing.tags.split(',') : new String[0]}" th:text="${tag}">태그</span>
+                <span class="tag" th:each="tag : ${writing.tags != null ? writing.tags.split(',') : {}}" th:text="${tag}">태그</span>
                 <span class="date" th:text="${#temporals.format(writing.createdAt, 'yyyy.MM.dd')}">날짜</span>
             </div>
 

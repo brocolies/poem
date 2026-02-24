@@ -1,5 +1,7 @@
 package com.poem.poem.controller;
 
+import com.poem.poem.domain.Poem;
+import com.poem.poem.dto.PoemResponse;
 import com.poem.poem.service.PoemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -15,7 +17,9 @@ public class PoemController {
 
     @GetMapping("/{id}")
     public String detail(@PathVariable Long id, Model model) {
-        model.addAttribute("poem", poemService.findById(id));
+        Poem poem = poemService.findById(id);
+        model.addAttribute("poem", new PoemResponse(poem));
+        // 엔티티를 DTO로 변환해서 넘김
         return "poem/detail";
     }
 }
