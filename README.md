@@ -72,7 +72,7 @@ cd poem
 - [x] 태그 기반 시 추천
 - [x] 시집 상세 페이지 + 외부 구매 링크
 - [x] DTO 패턴 적용
-- [ ] Claude API 연동 (감정 자동 분석)
-- [ ] 오늘의 시 기능
+- [x] Claude API 연동 (감정 자동 분석)
+- [x] 오늘의 시 기능
 - [ ] Spring Security (회원가입/로그인)
 - [ ] PostgreSQL 전환 + 배포
