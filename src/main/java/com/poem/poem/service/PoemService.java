@@ -48,16 +48,25 @@ public class PoemService {
                     }
                     return false;
                 })
-                .sorted((a, b) -> {
-                    long countA = tagList.stream().filter(tag -> a.getTags().contains(tag)).count();
-                    long countB = tagList.stream().filter(tag -> b.getTags().contains(tag)).count();
-                    return Long.compare(countB, countA);  // 겹침 많은 순
-                })
                 .toList();
 
         // 겹치는 개수 같을 때 랜덤으로 셔필
-        java.util.List<Poem> result = new java.util.ArrayList<>(matched);
-        Collections.shuffle(result);
+        // 겹침 수 기준으로 그룹핑 → 같은 점수 내에서만 셔플
+        Map<Long, List<Poem>> grouped = new LinkedHashMap<>();
+        for (Poem poem : matched) {
+            long count = tagList.stream().filter(tag -> poem.getTags().contains(tag)).count();
+            grouped.computeIfAbsent(count, k -> new ArrayList<>()).add(poem);
+        }
+
+        List<Poem> result = new ArrayList<>();
+        grouped.keySet().stream()
+                .sorted(Comparator.reverseOrder())  // 겹침 많은 순
+                .forEach(key -> {
+                    List<Poem> group = grouped.get(key);
+                    Collections.shuffle(group);  // 같은 점수 내에서만 셔플
+                    result.addAll(group);
+                });
+
         return result;
     }
     public PoemResponse findTodayPoem(List<Writing> quotes) {
